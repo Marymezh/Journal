@@ -43,6 +43,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     locationManager.requestAlwaysAuthorization()
     
+    center.requestAuthorization (options: [.alert, .sound]) { granted, error in
+      if let error = error {
+        print (error.localizedDescription)
+      }
+    }
+    
     return true
   }
 }
