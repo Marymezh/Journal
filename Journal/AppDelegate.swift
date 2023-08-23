@@ -53,6 +53,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       }
     }
     
+    locationManager.distanceFilter = 35
+    locationManager.allowsBackgroundLocationUpdates = true
+    locationManager.startUpdatingLocation()
+    
     return true
   }
 }
@@ -72,6 +76,8 @@ extension AppDelegate: CLLocationManagerDelegate {
   func newVisitReceived(_ visit: CLVisit, description: String) {
     let location = Location(visit: visit, descriptionString: description)
     
+    LocationsStorage.shared.saveLocation(location)
+    
     let content = UNMutableNotificationContent()
     content.title = "New Journal entry"
     content.body = location.description
@@ -82,6 +88,22 @@ extension AppDelegate: CLLocationManagerDelegate {
     
     center.add(request)
   }
+  
+  func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    guard let location = locations.first else {
+      return
+    }
+    AppDelegate.geoCoder.reverseGeocodeLocation(location) { placemarks, _ in
+      if let place = placemarks?.first {
+        let description = "Fake visit: \(place)"
+        let fakeVisit = FakeVisit(coordinates: location.coordinate, arrivalDate: Date(), departureDate: Date())
+        
+        self.newVisitReceived(fakeVisit, description: description)
+      }
+    }
+    
+  }
+  
 }
 
 final class FakeVisit: CLVisit {

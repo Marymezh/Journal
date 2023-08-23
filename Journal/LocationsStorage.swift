@@ -42,5 +42,19 @@ class LocationsStorage {
     self.fileManager = fileManager
     self.locations = []
   }
+  
+  func saveLocation(_ location: Location)
+  {
+    let encoder = JSONEncoder()
+    let timestamp = location.date.timeIntervalSince1970
+    let fileURL = documentsURL.appendingPathComponent("\(timestamp)")
+    do {
+      let data = try encoder.encode(location)
+      try data.write(to: fileURL)
+    } catch {
+        print (error.localizedDescription)
+    }
+    locations.append(location)
+  }
 }
 
