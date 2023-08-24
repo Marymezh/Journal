@@ -35,10 +35,35 @@ class MapViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     mapView.userTrackingMode = .follow
+    
+    let annotations = LocationsStorage.shared.locations.map {
+      annotationForLocation($0) }
+    mapView.addAnnotations(annotations)
+    
+    
+    NotificationCenter.default.addObserver(self, selector: #selector(newLocationAdded(_:)), name: .newLocationSaved, object: nil)
   }
   
   @IBAction func addItemPressed(_ sender: Any) {
     guard let currentLocation = mapView.userLocation.location else { return }
     LocationsStorage.shared.saveCLLocation(currentLocation)
+    
+    let alertController = UIAlertController(title: "New location \(currentLocation) is added to the Places", message: nil, preferredStyle: .alert)
+    let okAction = UIAlertAction(title: "Ok", style: .default)
+    alertController.addAction(okAction)
+    self.present(alertController, animated: true)
+  }
+  
+  func annotationForLocation(_ location: Location) -> MKAnnotation {
+    let annotation = MKPointAnnotation()
+    annotation.title = location.dateString
+    annotation.coordinate = location.coordinates
+    return annotation
+  }
+  
+  @objc func newLocationAdded(_ notification: Notification) {
+    guard let location = notification.userInfo?["location"] as? Location else {return}
+    let annotation = annotationForLocation(location)
+    mapView.addAnnotation(annotation)
   }
 }
