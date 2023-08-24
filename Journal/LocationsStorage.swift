@@ -73,6 +73,8 @@ class LocationsStorage {
         print (error.localizedDescription)
     }
     locations.append(location)
+    
+    NotificationCenter.default.post(name: .newLocationSaved, object: self, userInfo: ["location" : location])
   }
   func saveCLLocation(_ clLocation: CLLocation) {
     let currentDate = Date()
@@ -86,5 +88,9 @@ class LocationsStorage {
       }
     }
   }
+}
+
+extension Notification.Name {
+  static let newLocationSaved = Notification.Name("newLocationsSaved")
 }
 

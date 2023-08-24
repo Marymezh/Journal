@@ -30,6 +30,17 @@ import UIKit
 import UserNotifications
 
 class PlacesTableViewController: UITableViewController {
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    
+    NotificationCenter.default.addObserver(self, selector: #selector(newLocationAdded(_:)), name: .newLocationSaved, object: nil)
+  }
+  
+  @objc func newLocationAdded(_ notification: Notification) {
+    tableView.reloadData()
+  }
+  
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return LocationsStorage.shared.locations.count
   }
