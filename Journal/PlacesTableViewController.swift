@@ -33,6 +33,7 @@ class PlacesTableViewController: UITableViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    tableView.backgroundColor = .lightGray
     
     NotificationCenter.default.addObserver(self, selector: #selector(newLocationAdded(_:)), name: .newLocationSaved, object: nil)
   }

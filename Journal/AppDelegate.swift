@@ -52,10 +52,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print (error.localizedDescription)
       }
     }
+   // code for faking locaitons with Route file
     
-    locationManager.distanceFilter = 35
-    locationManager.allowsBackgroundLocationUpdates = true
-    locationManager.startUpdatingLocation()
+//    locationManager.distanceFilter = 35
+//    locationManager.allowsBackgroundLocationUpdates = true
+//    locationManager.startUpdatingLocation()
     
     return true
   }

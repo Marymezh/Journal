@@ -48,7 +48,7 @@ class MapViewController: UIViewController {
     guard let currentLocation = mapView.userLocation.location else { return }
     LocationsStorage.shared.saveCLLocation(currentLocation)
     
-    let alertController = UIAlertController(title: "New location \(currentLocation) is added to the Places", message: nil, preferredStyle: .alert)
+    let alertController = UIAlertController(title: "Your current location successfully added to the Places", message: nil, preferredStyle: .alert)
     let okAction = UIAlertAction(title: "Ok", style: .default)
     alertController.addAction(okAction)
     self.present(alertController, animated: true)
