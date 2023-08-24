@@ -76,7 +76,7 @@ extension AppDelegate: CLLocationManagerDelegate {
   func newVisitReceived(_ visit: CLVisit, description: String) {
     let location = Location(visit: visit, descriptionString: description)
     
-    LocationsStorage.shared.saveLocation(location)
+    LocationsStorage.shared.saveLocationToDisk(location)
     
     let content = UNMutableNotificationContent()
     content.title = "New Journal entry"

@@ -33,18 +33,36 @@ class LocationsStorage {
   static let shared = LocationsStorage()
   
   private(set) var locations: [Location]
-  private let fileManager: FileManager
+  private let fileManager = FileManager.default
   private let documentsURL: URL
   
-  init() {
-    let fileManager = FileManager.default
-    documentsURL = try! fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)    
-    self.fileManager = fileManager
-    self.locations = []
-  }
-  
-  func saveLocation(_ location: Location)
-  {
+  private init() {
+         self.documentsURL = fileManager.temporaryDirectory
+         self.locations = []
+         
+         loadData()
+     }
+     
+     private func loadData() {
+         do {
+             let locationFilesURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
+             let jsonDecoder = JSONDecoder()
+             
+             self.locations = try locationFilesURLs.compactMap { url in
+                 guard !url.absoluteString.contains(".DS_Store") else {
+                     return nil
+                 }
+                 
+                 let data = try Data(contentsOf: url)
+                 let location = try jsonDecoder.decode(Location.self, from: data)
+                 return location
+             }.sorted(by: { $0.date < $1.date })
+         } catch {
+             print("Error initializing: \(error)")
+         }
+     }
+    
+  func saveLocationToDisk(_ location: Location) {
     let encoder = JSONEncoder()
     let timestamp = location.date.timeIntervalSince1970
     let fileURL = documentsURL.appendingPathComponent("\(timestamp)")
@@ -55,6 +73,18 @@ class LocationsStorage {
         print (error.localizedDescription)
     }
     locations.append(location)
+  }
+  func saveCLLocation(_ clLocation: CLLocation) {
+    let currentDate = Date()
+    
+    AppDelegate.geoCoder.reverseGeocodeLocation(clLocation) { placemarks, _ in
+      guard let placemarks = placemarks else {return}
+      if let place = placemarks.first {
+        let location = Location(clLocation.coordinate, date: currentDate, descriptionString: "\(place)")
+        
+        self.saveLocationToDisk(location)
+      }
+    }
   }
 }
 

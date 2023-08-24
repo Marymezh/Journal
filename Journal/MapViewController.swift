@@ -38,6 +38,7 @@ class MapViewController: UIViewController {
   }
   
   @IBAction func addItemPressed(_ sender: Any) {
-    
+    guard let currentLocation = mapView.userLocation.location else { return }
+    LocationsStorage.shared.saveCLLocation(currentLocation)
   }
 }
