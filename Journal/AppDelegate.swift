@@ -39,11 +39,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   static let geoCoder = CLGeocoder()
   
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-    let rayWenderlichColor = UIColor(red: 0/255, green: 104/255, blue: 55/255, alpha: 1)
-    UITabBar.appearance().tintColor = rayWenderlichColor
+    UITabBar.appearance().tintColor = .systemRed
+    UITabBar.appearance().backgroundColor = UIColor.lightGray
     
     locationManager.requestAlwaysAuthorization()
-    
     locationManager.startMonitoringVisits()
     locationManager.delegate = self
     
@@ -54,9 +53,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
    // code for faking locaitons with Route file
     
-//    locationManager.distanceFilter = 35
-//    locationManager.allowsBackgroundLocationUpdates = true
-//    locationManager.startUpdatingLocation()
+    locationManager.distanceFilter = 35
+    locationManager.allowsBackgroundLocationUpdates = true
+    locationManager.startUpdatingLocation()
     
     return true
   }

@@ -32,9 +32,7 @@ import UserNotifications
 class PlacesTableViewController: UITableViewController {
   
   override func viewDidLoad() {
-    super.viewDidLoad()
-    tableView.backgroundColor = .lightGray
-    
+    super.viewDidLoad()    
     NotificationCenter.default.addObserver(self, selector: #selector(newLocationAdded(_:)), name: .newLocationSaved, object: nil)
   }
   
